@@ -55,13 +55,30 @@ app.get("/collectibles/:indexParameter", (req, res) => {
 });
 
 app.get("/shoes", (req, res) => {
-    const min_price = Number(req.query.min_price);
-    const max_price = Number(req.query.max_price);
-    const type = req.query.type;
+  const min_price = Number(req.query.min_price);
+  const max_price = Number(req.query.max_price);
+  const type = req.query.type;
 
-    const filteredShoes = shoes.filter((shoe) => {
-        return (shoe.type === type && shoe.price <= max_price && shoe.price >= min_price)
+  let filteredShoes = [...shoes]
+
+  if (!isNaN(min_price)) {
+    filteredShoes = filteredShoes.filter((shoe) => {
+      return shoe.price >= min_price; 
+    });  
+  }
+
+  console.log(!isNaN(max_price))
+  if (!isNaN(max_price)) {
+    filteredShoes = filteredShoes.filter((shoe) => {
+      return shoe.price <= max_price; 
+    });  
+  }
+
+  if (typeof type !== "undefined") {
+    filteredShoes = filteredShoes.filter((shoe) => {
+      return shoe.type === type;
     })
-    
-    res.send(filteredShoes);
+  }
+
+  res.send(filteredShoes);
 });
